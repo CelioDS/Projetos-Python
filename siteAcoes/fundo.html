@@ -13,22 +13,23 @@
 </head>
 
 <body>
-    <div class=" container-fluid tema1">
+    <div class=" container-full tema1">
         <header class="navbar navbar-dark bg-dark d-flex flex-wrap justify-content-center py-3 border-bottom  header1">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none ">
                 <svg class="bi me-2" width="40" height="32">
                     <use xlink:href="#bootstrap"></use>
                 </svg>
-                <span class="fs-4 text-primary">MERCADO DE OSCILAÇÃO</span>
+                 <span class="fs-3 cor1  ">MERCADO DE OSCILAÇÃO</span>
             </a>
 
-        <ul class="nav nav-pills ">
-            <li class="nav-item "><a href="index.html" class="nav-link " aria-current="page">Inicio</a></li>
-            <li class="nav-item"><a href="acoes.html" class="nav-link">Acoes</a></li>
-            <li class="nav-item"><a href="fundo.html" class="nav-link">Fundo imobiliarios</a></li>
-            <li class="nav-item"><a href="fixa.html" class="nav-link">Renda Fixa</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Sobre</a></li>
-        </ul>
+            <div id="myDIV">
+              <ul class="nav nav-pills ">
+                  <li class="nav-item"><a href="index.html" class="nav-link btn " aria-current="page">Inicio</a></li>
+                  <li class="nav-item"><a href="acoes.html" class="nav-link btn">Ações</a></li>
+                  <li class="nav-item"><a href="fundo.html" class="nav-link btn active">FIIs</a></li>
+                  <li class="nav-item"><a href="fixa.html" class="nav-link btn">Renda Fixa</a></li>
+              </ul>
+          </div>
     </header>
     <div class="container ">
         <div class="texto1">
@@ -48,13 +49,76 @@
             o idieal e voce reevestir esse valor <br>
             exemplo voce tem <strong>100</strong> cotas de um fundo imobiliarios <br>
             esse fundo vai pagar <strong>R$0,45</strong> centavos por cota <br>
-            <strong>
-                &emsp; 100 <br>
-                &emsp;*0,45 <br>
-                &emsp; 45<br></strong>
+       
+                <table class="table table-dark align-items-center">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="text-center">CONTA DE DIVIDENDOS</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>&nbsp;&nbsp;100 &nbsp; &nbsp; &nbsp;Quantidade de cotas</td>
+                       
+                        
+                      </tr>
+                      <tr>
+                       
+                        <td style="padding-left: 10px;">x&nbsp;0.45 &nbsp; &nbsp; &nbsp;Valor do dividendo </td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp; &nbsp; 45 &nbsp; &nbsp; &nbsp;Valor total de dividendos</td>
+                        
+                        
+                      </tr>
+                    </tbody>
+                  </table>
+
             todo mes voce vai ter um lucro de <strong>R$45</strong> reais <br>
             a diversos fundo imobiliarios de varios setores de imoveis ate valores, o dividento vai ser proporcional ao seu valor.
             voce pode adquirir um por ate <strong>R$10</strong> reais ate alguns com valores bem superiores    
+                  
+            <div  class="calculadora">
+                <h1 class="text bg-dark text-white">Calcular Dividendos</h1>
+                <input class="border bordacal" placeholder="  Quantidade de cotas"  type="int" data-js="number1"> 
+                <br>
+                <input  class="border bordacal " placeholder="Valor do dividendos = 0.00" type="int" data-js="number2">  
+                <button onclick="mostraAlerta()" class="bg-dark text-primary border-radius" type="button">multiplicar</button>
+                <div class="border bordacal " data-js="result"></div>
+                
+                <script>
+                  document.querySelector( 'button' )
+                    .addEventListener( 'click', handleClick, false );
+                  
+                  function handleClick() {
+                    var number1 = document.querySelector( '[data-js="number1"]').value;
+                    var number2 = document.querySelector( '[data-js="number2"]').value;
+                    
+                    document.querySelector( '[data-js="result"]' ).innerHTML = mult( number1, number2 );
+                  }
+                  
+                  function mult( number1, number2 ) {
+                    number1 = +number1;
+                    number2 = +number2;
+                    return number1 * number2;
+                  }
+                </script>
+                <div>
+                  <div id="alerta" class="d-none alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Caso de erro utilize ponto (.) no lugar na virgula (,)!</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                      <script>
+                        function mostraAlerta(){
+                          var  alerta = document.getElementById('alerta')
+                          alerta.classList.toggle('d-none');
+                        }
+                      </script>
+                    </button>
+                  </div>
+                </div>
+                
+            </div>
         </p>
 
     </div>
