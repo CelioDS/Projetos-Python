@@ -1,16 +1,13 @@
 import sys
 import time
 
-
-
 red= "\033[91m"
 white= "\033[0m"
 green = "\033[92m"
 blue = "\033[94m"
 
-
 class Bank:
-    def __init__(self, initial_balance=0): #initial value
+    def __init__(self, initial_balance=0.00): #initial value
       self.balance = initial_balance
       self.limit = {
                     "value_limit": 500,
@@ -19,7 +16,6 @@ class Bank:
       self.historic_account = [
           ('deposit', initial_balance)
       ]
-
 
     def sake(self):
 
@@ -32,6 +28,7 @@ class Bank:
                 sake_value = float(input("\ninform the withdrawal amount\nR$:"))
 
             if sake_value <= self.limit['value_limit'] and self.limit['qtd'] > 0:
+
                 self.limit["qtd"] -= 1
                 print(f"\n-its daily value is {green}{self.limit['value_limit']}{white} and the withdrawal limit is {green}{self.limit['qtd']}{white} ")
 
@@ -39,22 +36,28 @@ class Bank:
                 time.sleep(2)
 
                 if sake_value <= self.balance:
+
                     self.balance -= sake_value
                     self.historic_account.append(("sake", sake_value))
                     print(f"-withdrawal completed R$:{red}{sake_value}{white} remaining R$:{blue}{self.balance}{white}")
                     print("".center(50,'*'))
+
                 else:
+
                     print(f"-insufficient balance,your balance R$:{red}{self.balance}.{white}")
                     print("".center(50,'*'))
             else:
+
                 print(f"-Seu valor limite {green}{self.limit['value_limit']}{white} e o limite de saque diario {green}{self.limit['qtd']}{white}")
 
 
         except ValueError:
+
             print(f"-{red} entry incorrect,please, enter a valid value{white}")
             print("".center(50,'*'))
 
     def deposit(self):
+
         try:
             deposit_value =  float(input("\ninform the amount you will deposit: \nR$:"))
 
@@ -68,15 +71,19 @@ class Bank:
             self.historic_account.append(("deposit", deposit_value))
             print(f"-deposit  success of {green}{deposit_value}{white} equal {blue}{self.balance}{white}....")
             print("".center(50,'*'))
+
         except ValueError:
+
             print(f"-{red} entry incorrect,please, enter a valid value{white}")
             print("".center(50,'*'))
 
     def extract(self):
+
         print(f"\n-Your balance is R$:{blue}{self.balance:.2f}{white}\n")
 
         for transaction, value in self.historic_account:
             print(transaction, value)
+
         print("".center(50,'*'))
 
 account = Bank(initial_balance=3000)
@@ -91,6 +98,7 @@ while True:
     [4] exit
     """)
     print("".center(50,'='))
+    
     try:
         option = int(input("choose your option:\n>>>"))
 
