@@ -15,9 +15,15 @@ print(number[0][2])   # [3]
 print(number[-1][-1]) # [9]
 
 
-tu pla = ['c','e','l','i','o']
+tupleNwe = ['c','e','l','i','o'] #imutavel
 
-print(tu pla[2:])
-print(tu pla[0:2:1])
-print(tu pla[::])
-print(tu pla[::-1]) #REVERSE
+print(tupleNwe[2:])
+print(tupleNwe[0:2:1])
+print(tupleNwe[::])
+print(tupleNwe[::-1]) #REVERSE
+
+
+car = ("gol")
+car_tuple = ("gol",)
+print(isinstance(car, tuple))
+print(isinstance(car_tuple, tuple))
