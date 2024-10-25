@@ -1,37 +1,32 @@
-from datetime import datetime
 import time
+from datetime import datetime
 import random
 import pytest
-
 
 red = "\033[91m"
 white = "\033[0m"
 green = "\033[92m"
 blue = "\033[94m"
 
-
 def run_test():
     pytest.main(["-s", "bank_test.py"])
 
-
-def get_current_time():  # pega a hora
+def get_current_time():
     return datetime.now().strftime("%H:%M-%d/%m/%Y")
 
-
-def mask_cpf(cpf):  # mascara de cpf
+def mask_cpf(cpf):
     mask = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
     return mask
 
-
-def branch_mask(branch):  # mascara de agencia mudar e colocar conta
+def branch_mask(branch):
     mask = f"{branch[:4]}-{branch[4:]}"
     return mask
 
-
-class Bank:  #
-    def __init__(self):
-        self.historic_transactions = []
+class Bank:
+    def __init__(self, initial_balance=0.00):
+        self.balance = initial_balance
         self.historic_account = list()
+        self.historic_transactions = []
         self.account_default = '0001'
         self.accounts_users = []
         self.user_now = []
@@ -41,21 +36,18 @@ class Bank:  #
             "transaction": 10
         }
 
-    def historic_all(self):  # display do historico geral
-        for name, cpf, conta, agencia, a, b in self.accounts_users:
-            print(f"{name}:{cpf} {agencia} {conta} {a}")
 
-    def return_users(self):  # função de controle se tem usuario on login
+    def return_users(self):
         return len(self.user_now) > 0
 
-    def historic_transaction_log(self, func):  # hisotic de login
+    def historic_transaction_log(self, func):
         self.historic_transactions.append([get_current_time(), func.__name__.upper()])
         print('=' * 50)
         print(f'~[{get_current_time()}] - FUNC: {func.__name__.upper()} - STATUS: OK')
         print('=' * 50)
         return
 
-    def create_account(self, name=None, cpf=None):  # criar conta
+    def create_account(self, name=None, cpf=None):
         cpf_equal = 0
         list_branch = []
         branch = random.choices(range(0, 10), k=5)
@@ -72,41 +64,37 @@ class Bank:  #
         cpf_default = mask_cpf(cpf)
         branch_default = branch_mask(branch)
 
-        for name_list, cpf_list, accounts, branch, *rest in self.accounts_users:
+        for name, cpf_list,accounts,branch, *rest in self.accounts_users:
             list_branch.append(branch)
-
+            print( cpf_list , cpf_default)
             if cpf_list == cpf_default:
                 cpf_equal += 1
 
         while branch_default in list_branch:
-            branch = random.choices(range(0, 10), k=5)
-            branch = ''.join(map(str, branch))
-            branch_default = branch_mask(branch)
+          branch = random.choices(range(0, 10), k=5)
+          branch = ''.join(map(str, branch))
+          branch_default = branch_mask(branch)
 
         if cpf_equal == 0:
             self.accounts_users.append((name, cpf_default, self.account_default, branch_default, {'Balance': 0}, []))
         else:
             print(f"The CPF {cpf_default} is already registered. Please try registering a different CPF.")
 
-    def login_account(self, cpf=None):  # login
+    def login_account(self, cpf):
+        print(self.accounts_users)
 
-        cpf = str(input("Digite seu cpf"))
         if cpf is not None:
             cpf_default = mask_cpf(cpf)
             for account_user in self.accounts_users:
-
+                print(account_user)
                 if account_user[1] == cpf_default:
                     print(f"user: {account_user[0]}")
                     self.user_now = account_user
                     break
         else:
-            self.user_now = []
+           self.user_now = []
 
-    def logoff_account(self,):  # login
-            self.user_now = []
-
-
-    def withdraw(self, withdraw_value=None):  # função de saque
+    def withdraw(self, withdraw_value=None):
 
         try:
             self.historic_transaction_log(self.withdraw)
@@ -133,24 +121,28 @@ class Bank:  #
 
                 print(f"\n-withdraw R$:{withdraw_value} loading....")
 
-                if withdraw_value <= self.user_now[4]["Balance"]:
+                if withdraw_value != self.balance:
+                    'Corrigir depois'
 
                     for user in self.accounts_users:
                         if self.user_now == user:
                             self.user_now[4]["Balance"] -= withdraw_value
                             self.user_now[5].append(("WITHDRAW", withdraw_value, get_current_time()))
 
+                    self.balance -= withdraw_value
                     self.historic_account.append(("WITHDRAW", withdraw_value, get_current_time()))
                     print(
-                        f"-withdrawal completed R$:{red}{withdraw_value}{white} remaining R$:{blue}{self.user_now[4]}{white}")
+                        f"-withdrawal completed R$:{red}{withdraw_value}{white} remaining R$:{blue}{self.balance}{white}")
+
 
                 else:
 
-                    print(f"-insufficient balance,your balance R$:{red}{self.user_now[4]}.{white}")
+                    print(f"-insufficient balance,your balance R$:{red}{self.balance}.{white}")
 
             else:
                 print(
                     f"-your limit is {green}{self.limit['value_limit'] * 3}{white} and daily withdrawal limit is {green}{self.limit['qtd']}{white}")
+
 
         except ValueError:
 
@@ -159,7 +151,7 @@ class Bank:  #
         print("".center(53, ' '))
         time.sleep(0.5)
 
-    def deposit(self, deposit_value=None):  # função deposit
+    def deposit(self, deposit_value=None):
 
         try:
             self.historic_transaction_log(self.deposit)
@@ -183,7 +175,7 @@ class Bank:  #
 
             self.limit['transaction'] -= 1
 
-            print(f"-deposit  success of {green}{deposit_value}{white} equal {blue}{self.user_now[4]["Balance"]}{white}....")
+            print(f"-deposit  success of {green}{deposit_value}{white} equal {blue}{self.balance}{white}....")
 
         except ValueError:
 
@@ -192,15 +184,16 @@ class Bank:  #
         print("".center(53, ' '))
         time.sleep(0.5)
 
-    def extract(self):  # display de extract
+    def extract(self):
         self.historic_transaction_log(self.extract)
 
-        print(f"""\n-💳Balance R$:{blue}{self.user_now[4]["Balance"]:.2f}{white}\n
+        print(f"""\n-💳Balance R$:{blue}{self.balance:.2f}{white}\n
 here is your transaction history""")
+
 
         print("EXTRACT".center(53, '-'))
         if len(self.historic_account) == 0:
-            print("-No extract") 
+            print("-No extract")
         for user in self.accounts_users:
             if self.user_now == user:
                 for transaction, value, date in self.user_now[5]:
@@ -210,10 +203,10 @@ here is your transaction history""")
                         value_display = f"{green}{value:.2f}{white}"
                     print(f"{transaction:<15} R$:{value_display:<25} {date:<30}")
 
-        time.sleep(0.5)
+        time.sleep(3)
 
 
-account = Bank()
+account = Bank(initial_balance=0)
 
 if __name__ == "__main__":
 
@@ -227,13 +220,14 @@ if __name__ == "__main__":
 [1] withdraw 💸
 [2] Deposit  💵
 [3] Extract  📄
-[4] Exit     ❌''')
+[4] Exit     ❌
+[5] historic all     🤖 ''')
         else:
             print("""
 [1] Sign Up       📝
 [2] Sign In       🔑
-[3] Bot Test      🤖
-[4] historic all  🤖 """)
+[3] Sign In 2     🔑
+[4] Bot Test      🤖 """)
 
         print("".center(53, '-'))
         try:
@@ -247,20 +241,35 @@ if __name__ == "__main__":
                 elif option == 3:
                     account.extract()
                 elif option == 4:
-                    account.logoff_account()
+                   account.login_account(None)
                 else:
                     print(f"\n{red}-option invalid{white}")
             else:
                 if option == 1:
-                    account.create_account()
-
+                    account.create_account('celio', '50816832803')
+                    time.sleep(2)
+                    account.create_account("eu", '50816832804')
+                    time.sleep(2)
+                    account.create_account("eu", '50816832805')
                 elif option == 2:
-                    account.login_account()
+                    account.login_account('50816832803')
+                    account.deposit(10000)
+                    account.withdraw(100)
+                    account.extract()
                 elif option == 3:
-                    run_test()
+                    account.login_account('50816832804')
+                    account.deposit(20000)
+                    account.withdraw(200)
+                    account.extract()
                 elif option == 4:
-                    account.historic_all()
+                    account.login_account('50816832805')
+                    account.deposit(20000)
+                    account.withdraw(200)
+                    account.extract()
+                elif option == 5:
+                    run_test()
                 else:
                     print(f"\n{red}-option invalid{white}")
         except ValueError:
             print(f"\n{red}-entry incorrect,please, enter a valid value{white}")
+
