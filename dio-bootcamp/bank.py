@@ -10,6 +10,9 @@ green = "\033[92m"
 blue = "\033[94m"
 
 
+
+#criar class padrao POO
+
 def run_test():
     pytest.main(["-s", "bank_test.py"])
 
@@ -42,8 +45,8 @@ class Bank:  #
         }
 
     def historic_all(self):  # display do historico geral
-        for name, cpf, conta, agencia, a, b in self.accounts_users:
-            print(f"{name}:{cpf} {agencia} {conta} {a}")
+        for name, cpf, accounts, branch, a, b in self.accounts_users:
+            print(f"{name}:{cpf} {branch} {accounts} {a}")
 
     def return_users(self):  # função de controle se tem usuario on login
         return len(self.user_now) > 0
@@ -90,7 +93,12 @@ class Bank:  #
 
     def login_account(self, cpf=None):  # login
 
-        cpf = str(input("Digite seu cpf"))
+        if len(self.accounts_users) >= 1:
+            cpf = str(input("enter your CPF"))
+        else:
+            print('user not registered')
+
+
         if cpf is not None:
             cpf_default = mask_cpf(cpf)
             for account_user in self.accounts_users:
@@ -99,6 +107,8 @@ class Bank:  #
                     print(f"user: {account_user[0]}")
                     self.user_now = account_user
                     break
+                else:
+                    print('user not registered')
         else:
             self.user_now = []
 
@@ -211,6 +221,9 @@ here is your transaction history""")
                     print(f"{transaction:<15} R$:{value_display:<25} {date:<30}")
 
         time.sleep(0.5)
+
+    def __str__(self):
+        return f"IO{self.__class__.__name__}"
 
 
 account = Bank()
