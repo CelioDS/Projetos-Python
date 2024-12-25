@@ -29,9 +29,10 @@ class Bank:  #
             "qtd": 3,
             "transaction": 10
         }
-        self.accounts_users = [('celio',
+        self.accounts_users = [('Celio',
                                 '518.156.328-12',
-                                '0001', '1236-5',
+                                '0001',
+                                '1236-5',
                                 {"Balance": 1000},
                                 [('WITHDRAW', 1000, '17:41-24/12/2024'),('DEPOSIT', 2000, '17:41-24/12/2024')],
                                 [('~[19:02-24/12/2024] - FUNC: DEPOSIT_UI - STATUS: OK'),('~[19:02-24/12/2024] - FUNC: WITHDRAW_UI - STATUS: OK')])]
@@ -62,10 +63,15 @@ class Bank:  #
         else:
             info_frame = tk.Frame(self.root)
             info_frame.pack(pady=10)
-            tk.Label(info_frame, text=f"USER: {len(self.accounts_users)}").grid(row=0, column=0, padx=10, pady=5)
 
-            tk.Button(self.root, text="Sign Up", command=self.signup_ui, width=20).pack(pady=5)
-            tk.Button(self.root, text="Sign in", command=self.signin_ui, width=20).pack(pady=5)
+
+
+            tk.Button(info_frame, text="Sign Up", command=self.signup_ui, width=20).grid(row=1, column=0, padx=10, pady=5)
+            tk.Button(info_frame, text="Sign in", command=self.signin_ui, width=20).grid(row=2, column=0, padx=10, pady=5)
+
+            tk.Label(info_frame, text=f"USER: {len(self.accounts_users)}").grid(row=3, column=0, padx=10, pady=5)
+            for users in self.accounts_users:
+                tk.Label(info_frame, text=f"{users[0]} : {users[1]}").grid()
 
     def clear_frame(self):
         for widget in self.root.winfo_children():
@@ -83,7 +89,7 @@ class Bank:  #
         self.user_now[6].append(f"~[{get_current_time()}] - FUNC: {func.__name__.upper()} - STATUS: OK")
         return  f'~[{get_current_time()}] - FUNC: {func.__name__.upper()} - STATUS: OK'
 
-    def signup_ui(self, name=None, cpf=None):  # criar conta
+    def signup_ui(self):  # criar conta
         self.clear_frame()
 
         tk.Label(self.root, text="Sign Up", font=("Arial", 16)).pack(pady=10)
@@ -97,8 +103,8 @@ class Bank:  #
 
         def register():
             list_branch = []
-            name = name_entry.get()
-            cpf = cpf_entry.get()
+            name = name_entry.get().capitalize()
+            cpf = cpf_entry.get().replace("-","").replace(".","")
 
             if len(cpf) != 11 or not cpf.isdigit():
                 messagebox.showerror("Error", "CPF must be 11 digits number")
@@ -107,8 +113,8 @@ class Bank:  #
                 messagebox.showerror("Error", "Name invalid")
                 return
 
-            branchs = "".join(map(str, random.choices(range(0,10), k=5)))
-            branch_masked = branch_mask(branchs)
+            branch = "".join(map(str, random.choices(range(0,10), k=5)))
+            branch_masked = branch_mask(branch)
             cpf_masked = mask_cpf(cpf)
 
             for name_list, cpf_list, accounts, branch, *rest in self.accounts_users:
@@ -288,6 +294,7 @@ class Bank:  #
 
     def __str__(self):
         return f"IO{self.__class__.__name__}"
+
 
 root = tk.Tk()
 account = Bank(root)
