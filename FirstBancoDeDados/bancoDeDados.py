@@ -83,6 +83,4 @@ botao_cadastrar.grid(row=4, column=0, padx=10, pady=10, columnspan=2, ipadx=80)
 botao_exportar = tk.Button(janela, text='exportar base de clientes', command = exporta_clientes)
 botao_exportar.grid(row=5, column=0, padx=10, pady=10,  columnspan=2, ipadx=80)
 
-
-
 janela.mainloop()
