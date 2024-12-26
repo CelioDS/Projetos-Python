@@ -18,6 +18,8 @@ def branch_mask(branch):  # mascara de agencia mudar e colocar conta
     mask = f"{branch[:4]}-{branch[4:]}"
     return mask
 
+
+
 class Bank:  #
     def __init__(self, root):
         self.user_now = []
@@ -29,7 +31,7 @@ class Bank:  #
             "qtd": 3,
             "transaction": 10
         }
-        self.accounts_users = [('Celio',
+        self.accounts_users = [('teste',
                                 '518.156.328-12',
                                 '0001',
                                 '1236-5',
@@ -40,6 +42,15 @@ class Bank:  #
         self.root.title("Bank APP")
         self.root.geometry("700x600+750+250")
         self.build_main_menu()
+
+    def log_ok(self):
+        text_log = self.historic_transaction_log(self.withdraw_ui, "OK")
+        tk.Label(self.root, text=text_log, font=("Courier", 10), anchor="w").pack(pady=10)
+
+    def log_nok(self):
+        text_log = self.historic_transaction_log(self.withdraw_ui, "NOK")
+        tk.Label(self.root, text=text_log, font=("Courier", 10), anchor="w").pack(pady=10)
+
 
     def build_main_menu(self):
         self.clear_frame()
@@ -84,10 +95,10 @@ class Bank:  #
     def return_users(self):  # função de controle se tem usuario on login
         return len(self.user_now) > 0
 
-    def historic_transaction_log(self, func):  # hisotic de login
+    def historic_transaction_log(self, func, status):  # hisotic de login
         self.historic_transactions.append([get_current_time(), func.__name__.upper()])
-        self.user_now[6].append(f"~[{get_current_time()}] - FUNC: {func.__name__.upper()} - STATUS: OK")
-        return  f'~[{get_current_time()}] - FUNC: {func.__name__.upper()} - STATUS: OK'
+        self.user_now[6].append(f"~[{get_current_time()}] - FUNC: {func.__name__.upper()} - STATUS: {status}")
+        return  f'~[{get_current_time()}] - FUNC: {func.__name__.upper()} - STATUS: {status}'
 
     def signup_ui(self):  # criar conta
         self.clear_frame()
@@ -186,14 +197,17 @@ class Bank:  #
 
                 if amount > self.limit["value_limit"] or self.limit["qtd"] <= 0:
                     messagebox.showerror("Error", "Widhdrawal limit exceeded")
+                    self.log_nok()
                     return
 
                 if self.limit['transaction']  <= 0:
                     messagebox.showerror("Error", "Transaction limit exceeded")
+                    self.log_nok()
                     return
 
                 if amount > self.user_now[4]["Balance"]:
                     messagebox.showerror("Error", "Insufficient balance")
+                    self.log_nok()
                     return
 
                 self.user_now[4]["Balance"] -= amount
@@ -203,11 +217,12 @@ class Bank:  #
                 self.limit["qtd"] -= 1
                 self.limit['transaction'] -= 1
 
-                text_log = self.historic_transaction_log(self.withdraw_ui)
+                text_log = self.historic_transaction_log(self.withdraw_ui, "OK")
                 tk.Label(self.root, text=text_log, font=("Courier", 10), anchor="w").pack(pady=10)
                 messagebox.showinfo("Success", f"width: R$ {amount:.2f}")
                 self.build_main_menu()
             except ValueError:
+                self.log_nok()
                 messagebox.showinfo("Error", "Invalid input")
 
 
@@ -229,23 +244,26 @@ class Bank:  #
                 amount = float(amount_entry.get())
 
                 if amount <= 0:
+                    self.log_nok()
                     raise ValueError("Invalid amount")
 
                 if self.limit['transaction']  <= 0:
                     messagebox.showerror("Error", "Transaction limit exceeded")
+                    self.log_nok()
                     return
 
                 self.user_now[4]["Balance"] += amount
                 self.user_now[5].append(("DEPOSIT", amount, get_current_time()))
                 self.limit['transaction'] -= 1
 
-                text_log = self.historic_transaction_log(self.deposit_ui)
+                text_log = self.historic_transaction_log(self.deposit_ui,"OK")
                 tk.Label(self.root, text=text_log, font=("Courier", 10), anchor="w").pack(pady=10)
 
                 messagebox.showinfo("Success", f"Deposited: R$ {amount:.2f}")
                 self.build_main_menu()
 
             except ValueError:
+                self.log_nok()
                 messagebox.showerror("Error", "Invalid input")
 
 
@@ -263,6 +281,7 @@ class Bank:  #
 
         if not transactions:
           tk.Label(self.root, text="No transactions").pack()
+          self.log_nok()
         else:
             info_frame = tk.Frame(self.root)
             info_frame.pack(pady=10)
@@ -283,10 +302,11 @@ class Bank:  #
 
         tk.Button(self.root, text="Back", command=self.build_main_menu, width=20).pack(pady=10)
 
-        self.historic_transaction_log(self.extract_ui)
+        self.historic_transaction_log(self.extract_ui, "OK")
         tk.Label(self.root, text="LOG", font=("Courier", 10, "bold"), anchor="center").pack()
         if not transactions:
             tk.Label(self.root, text="No transactions historic").pack()
+            self.log_nok()
         else:
             for transaction_hit in transactions_historic:
                 color = "grey"
