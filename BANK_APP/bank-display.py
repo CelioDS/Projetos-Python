@@ -51,7 +51,6 @@ class Bank:  #
         text_log = self.historic_transaction_log(self.withdraw_ui, "NOK")
         tk.Label(self.root, text=text_log, font=("Courier", 10), anchor="w").pack(pady=10)
 
-
     def build_main_menu(self):
         self.clear_frame()
 
@@ -224,8 +223,6 @@ class Bank:  #
             except ValueError:
                 self.log_nok()
                 messagebox.showinfo("Error", "Invalid input")
-
-
 
         tk.Button(self.root, text="Widthdraw", command=withdraw, width=20).pack(pady=10)
         tk.Button(self.root, text="Back", command=self.build_main_menu, width=20).pack()
