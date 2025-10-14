@@ -35,3 +35,4 @@ data/             # Ignora toda a pasta 'data' e seu conteúdo
 *.zip             # Ignora todos os arquivos .zip
 *.parquet         # Ignora todos os arquivos .parquet (usados em dataframes grandes)
 *.duckdb2         # Ignora arquivos do tipo .duckdb2 (talvez um banco de dados personalizado)
+*.duckdb
