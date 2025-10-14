@@ -1,0 +1,37 @@
+# Arquivos de cache Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Ambiente virtual
+venv/
+.env/
+.envrc
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Arquivos do VSCode
+.vscode/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Relatórios
+*.html
+*.pdf
+
+# Arquivos do pandas profiling
+report.html
+
+# Logs
+*.log
+
+# Dados sensíveis ou grandes
+data/
+*.csv
+*.zip
+*.parquet
+*.duckdb2
