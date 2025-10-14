@@ -30,8 +30,8 @@ report.html
 *.log
 
 # Dados sensíveis ou grandes
-data/
-*.csv
-*.zip
-*.parquet
-*.duckdb2
+data/             # Ignora toda a pasta 'data' e seu conteúdo
+*.csv             # Ignora todos os arquivos .csv no repositório
+*.zip             # Ignora todos os arquivos .zip
+*.parquet         # Ignora todos os arquivos .parquet (usados em dataframes grandes)
+*.duckdb2         # Ignora arquivos do tipo .duckdb2 (talvez um banco de dados personalizado)
