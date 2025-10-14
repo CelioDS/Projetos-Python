@@ -75,7 +75,6 @@ class Bank:  #
             info_frame.pack(pady=10)
 
 
-
             tk.Button(info_frame, text="Sign Up", command=self.signup_ui, width=20).grid(row=1, column=0, padx=10, pady=5)
             tk.Button(info_frame, text="Sign in", command=self.signin_ui, width=20).grid(row=2, column=0, padx=10, pady=5)
 

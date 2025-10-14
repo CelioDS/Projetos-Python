@@ -3,33 +3,25 @@ import time
 import random
 import pytest
 
-
 red = "\033[91m"
 white = "\033[0m"
 green = "\033[92m"
 blue = "\033[94m"
 
-
-
 #criar class padrao POO
-
 def run_test():
     pytest.main(["-s", "bank_test.py"])
 
-
 def get_current_time():  # pega a hora
     return datetime.now().strftime("%H:%M-%d/%m/%Y")
-
 
 def mask_cpf(cpf):  # mascara de cpf
     mask = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
     return mask
 
-
 def branch_mask(branch):  # mascara de agencia mudar e colocar conta
     mask = f"{branch[:4]}-{branch[4:]}"
     return mask
-
 
 class Bank:  #
     def __init__(self):
@@ -224,7 +216,6 @@ here is your transaction history""")
 
     def __str__(self):
         return f"IO{self.__class__.__name__}"
-
 
 account = Bank()
 
